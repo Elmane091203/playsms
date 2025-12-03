@@ -10,7 +10,7 @@ RUN apt-get update && \
 WORKDIR /var/www/html
 
 # Cloner PlaySMS
-RUN git clone https://github.com/playsms/playsms.git . && \
+RUN git clone https://github.com/playsms/playsms.git  && \
     cp config-dist.php config.php
 
 # Copier le script d'entrypoint pour config.php
