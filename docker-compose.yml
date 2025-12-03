@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  playsms-db:
+    image: mariadb:10.11
+    container_name: playsms_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - playsms_db_data:/var/lib/mysql
+    restart: unless-stopped
+
+  playsms-web:
+    build: ./playsms
+    container_name: playsms_app
+    depends_on:
+      - playsms-db
+    environment:
+      DB_HOST: playsms-db
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASS: ${MYSQL_PASSWORD}
+    ports:
+      - "80:80"  # Dokploy gère le reverse proxy et SSL
+    restart: unless-stopped
+
+volumes:
+  playsms_db_data:
