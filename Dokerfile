@@ -11,12 +11,17 @@ RUN a2enmod rewrite
 # Working directory
 WORKDIR /var/www/html
 
-# Clone PlaySMS
-RUN git clone https://github.com/playsms/playsms.git . 
+# Clone PlaySMS (sans configuration)
+RUN git clone https://github.com/playsms/playsms.git .
+
+# Copie du script de configuration
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # Permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 
 EXPOSE 80
-CMD ["apache2-foreground"]
+
+ENTRYPOINT ["/entrypoint.sh"]
